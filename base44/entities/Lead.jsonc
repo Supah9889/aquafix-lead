@@ -1,0 +1,57 @@
+{
+  "name": "Lead",
+  "type": "object",
+  "properties": {
+    "issue": {
+      "type": "string",
+      "enum": [
+        "Musty smell",
+        "Water leak or flooding",
+        "Visible mold",
+        "Ceiling or wall stains",
+        "Not sure yet"
+      ],
+      "description": "Type of water damage issue"
+    },
+    "urgency": {
+      "type": "string",
+      "enum": [
+        "Emergency (today)",
+        "Within a few days",
+        "Within a week",
+        "Just looking"
+      ],
+      "description": "How urgent the issue is"
+    },
+    "first_name": {
+      "type": "string",
+      "description": "Contact first name"
+    },
+    "phone": {
+      "type": "string",
+      "description": "Contact phone number"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Optional additional notes"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "partial",
+        "complete"
+      ],
+      "default": "partial",
+      "description": "Submission status"
+    },
+    "source": {
+      "type": "string",
+      "description": "Traffic source (Nextdoor, Facebook, etc.)"
+    },
+    "last_step_completed": {
+      "type": "number",
+      "description": "Last step the user completed"
+    }
+  },
+  "required": []
+}
