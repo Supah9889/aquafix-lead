@@ -3,7 +3,7 @@ import { base44 } from "@/api/base44Client";
 import { useQuery } from "@tanstack/react-query";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { Droplets, Search, Filter } from "lucide-react";
+import { Search, Filter } from "lucide-react";
 
 import DashboardStats from "../components/dashboard/DashboardStats";
 import LeadTable from "../components/dashboard/LeadTable";
@@ -32,13 +32,12 @@ export default function Dashboard() {
       {/* Header */}
       <header className="border-b border-border bg-card/80 backdrop-blur-lg sticky top-0 z-10">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center">
-            <Droplets className="w-5 h-5 text-primary-foreground" />
-          </div>
-          <div>
-            <h1 className="text-lg font-bold text-foreground">Lead Dashboard</h1>
-            <p className="text-xs text-muted-foreground">AquaRestore — Water Damage & Restoration</p>
-          </div>
+          <img
+            src="https://media.base44.com/images/public/69cd76565105bbe715f914f5/d1df888c8_image.png"
+            alt="Destination Home"
+            className="h-10 w-auto object-contain"
+          />
+          <h1 className="text-lg font-bold text-foreground">Lead Dashboard</h1>
         </div>
       </header>
 

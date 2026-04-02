@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import { base44 } from "@/api/base44Client";
 import { AnimatePresence, motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight, Send, Droplets } from "lucide-react";
+import { ArrowLeft, ArrowRight, Send } from "lucide-react";
 
 import ProgressBar from "../components/form/ProgressBar";
 import StepIssue from "../components/form/StepIssue";
@@ -107,14 +107,12 @@ export default function LeadForm() {
       <WaterBg />
 
       {/* Header */}
-      <header className="w-full px-5 pt-5 pb-3 flex items-center gap-2.5 max-w-lg mx-auto">
-        <div className="w-9 h-9 rounded-xl bg-primary flex items-center justify-center">
-          <Droplets className="w-5 h-5 text-primary-foreground" />
-        </div>
-        <div>
-          <h1 className="text-sm font-bold text-foreground leading-none">AquaRestore</h1>
-          <p className="text-[11px] text-muted-foreground">Water Damage & Restoration</p>
-        </div>
+      <header className="w-full px-5 pt-6 pb-3 flex justify-center max-w-lg mx-auto">
+        <img
+          src="https://media.base44.com/images/public/69cd76565105bbe715f914f5/d1df888c8_image.png"
+          alt="Destination Home"
+          className="h-16 w-auto object-contain"
+        />
       </header>
 
       {/* Progress */}
