@@ -7,26 +7,26 @@ export default function StepContact({ firstName, phone, onChange, errors }) {
   return (
     <motion.div
       className="flex flex-col items-center"
-      initial={{ opacity: 0, y: 16 }}
+      initial={{ opacity: 0, y: 14 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
+      transition={{ duration: 0.28 }}
     >
-      <h2 className="text-2xl font-bold text-foreground text-center leading-tight">
+      <h2 className="text-[22px] font-bold text-accent text-center leading-snug">
         How can we reach you?
       </h2>
-      <p className="text-muted-foreground text-sm mt-2 mb-8 text-center">
-        We'll call or text to schedule your assessment
+      <p className="text-muted-foreground text-sm mt-2 mb-7 text-center">
+        We'll call or text to schedule your free assessment
       </p>
-      <div className="w-full space-y-4">
+      <div className="w-full space-y-5">
         <div>
-          <label className="text-sm font-medium text-foreground mb-1.5 block">First name</label>
+          <label className="text-sm font-semibold text-foreground mb-2 block">First name</label>
           <div className="relative">
-            <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-muted-foreground" />
+            <User className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input
               placeholder="Your first name"
               value={firstName}
               onChange={(e) => onChange("first_name", e.target.value)}
-              className={`pl-11 h-13 text-base rounded-xl border-2 ${errors.first_name ? "border-destructive" : "border-border focus:border-primary"}`}
+              className={`pl-11 h-12 text-base rounded-md border bg-white ${errors.first_name ? "border-destructive" : "border-border focus:border-primary"}`}
             />
           </div>
           {errors.first_name && (
@@ -34,15 +34,15 @@ export default function StepContact({ firstName, phone, onChange, errors }) {
           )}
         </div>
         <div>
-          <label className="text-sm font-medium text-foreground mb-1.5 block">Phone number</label>
+          <label className="text-sm font-semibold text-foreground mb-2 block">Phone number</label>
           <div className="relative">
-            <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-muted-foreground" />
+            <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input
-              placeholder="(555) 123-4567"
+              placeholder="(843) 315-9572"
               type="tel"
               value={phone}
               onChange={(e) => onChange("phone", e.target.value)}
-              className={`pl-11 h-13 text-base rounded-xl border-2 ${errors.phone ? "border-destructive" : "border-border focus:border-primary"}`}
+              className={`pl-11 h-12 text-base rounded-md border bg-white ${errors.phone ? "border-destructive" : "border-border focus:border-primary"}`}
             />
           </div>
           {errors.phone && (

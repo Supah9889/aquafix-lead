@@ -107,23 +107,26 @@ export default function LeadForm() {
       <WaterBg />
 
       {/* Header */}
-      <header className="w-full px-5 pt-6 pb-3 flex justify-center max-w-lg mx-auto">
+      <header className="w-full pt-8 pb-4 flex justify-center">
         <img
           src="https://media.base44.com/images/public/69cd76565105bbe715f914f5/d1df888c8_image.png"
           alt="Destination Home"
-          className="h-16 w-auto object-contain"
+          className="h-20 w-auto object-contain"
         />
       </header>
 
+      {/* Divider */}
+      <div className="w-full border-b border-border/60" />
+
       {/* Progress */}
       {!isConfirmation && (
-        <div className="px-5 py-3 max-w-lg mx-auto w-full">
+        <div className="px-5 pt-5 pb-2 max-w-lg mx-auto w-full">
           <ProgressBar currentStep={step} />
         </div>
       )}
 
       {/* Step Content */}
-      <main className="flex-1 px-5 max-w-lg mx-auto w-full pb-32">
+      <main className="flex-1 px-5 max-w-lg mx-auto w-full pb-36">
         <AnimatePresence mode="wait" custom={direction}>
           <motion.div
             key={step}
@@ -164,13 +167,13 @@ export default function LeadForm() {
 
       {/* Bottom Navigation (steps 3 & 4) */}
       {!isConfirmation && step >= 3 && (
-        <div className="fixed bottom-0 inset-x-0 bg-background/80 backdrop-blur-lg border-t border-border px-5 py-4">
+        <div className="fixed bottom-0 inset-x-0 bg-white border-t border-border px-5 py-4 shadow-lg">
           <div className="max-w-lg mx-auto flex gap-3">
             <Button
               variant="outline"
               size="lg"
               onClick={goBack}
-              className="rounded-xl h-13 px-5 border-2"
+              className="rounded-md h-12 px-6 border border-border text-foreground font-semibold hover:bg-muted"
             >
               <ArrowLeft className="w-4 h-4 mr-1" />
               Back
@@ -179,13 +182,13 @@ export default function LeadForm() {
               size="lg"
               onClick={goNext}
               disabled={saving}
-              className="rounded-xl h-13 flex-1 text-base font-semibold"
+              className="rounded-md h-12 flex-1 text-base font-semibold bg-primary hover:bg-accent text-white"
             >
               {saving ? (
-                <div className="w-5 h-5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
+                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
               ) : step === 4 ? (
                 <>
-                  Submit
+                  Submit Request
                   <Send className="w-4 h-4 ml-2" />
                 </>
               ) : (
@@ -201,13 +204,13 @@ export default function LeadForm() {
 
       {/* Back button for step 2 */}
       {step === 2 && (
-        <div className="fixed bottom-0 inset-x-0 bg-background/80 backdrop-blur-lg border-t border-border px-5 py-4">
+        <div className="fixed bottom-0 inset-x-0 bg-white border-t border-border px-5 py-4 shadow-lg">
           <div className="max-w-lg mx-auto">
             <Button
               variant="outline"
               size="lg"
               onClick={goBack}
-              className="rounded-xl h-13 px-5 border-2"
+              className="rounded-md h-12 px-6 border border-border text-foreground font-semibold hover:bg-muted"
             >
               <ArrowLeft className="w-4 h-4 mr-1" />
               Back

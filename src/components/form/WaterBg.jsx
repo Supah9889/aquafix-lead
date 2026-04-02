@@ -3,11 +3,12 @@ import React from "react";
 export default function WaterBg() {
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
-      {/* Top gradient */}
-      <div className="absolute -top-32 -right-32 w-80 h-80 rounded-full bg-primary/5 blur-3xl" />
-      <div className="absolute -top-16 -left-16 w-64 h-64 rounded-full bg-accent/5 blur-3xl" />
-      {/* Bottom wave shapes */}
-      <div className="absolute -bottom-20 left-1/2 -translate-x-1/2 w-[600px] h-48 rounded-full bg-primary/3 blur-3xl" />
+      {/* Soft sky-blue top wash */}
+      <div className="absolute top-0 inset-x-0 h-64 bg-gradient-to-b from-[#daeeff] to-transparent opacity-60" />
+      {/* Subtle orb accents */}
+      <div className="absolute -top-20 -right-20 w-72 h-72 rounded-full bg-[#3a9fd4]/8 blur-3xl" />
+      <div className="absolute top-40 -left-24 w-56 h-56 rounded-full bg-[#3a9fd4]/6 blur-3xl" />
+      <div className="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-[#daeeff]/30 to-transparent" />
     </div>
   );
 }
