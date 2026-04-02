@@ -1,9 +1,11 @@
 import React from "react";
 import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Phone, User, MessageSquare, AlertTriangle, Clock, Tag } from "lucide-react";
+import { Phone, User, MessageSquare, Clock, Tag, Trash2 } from "lucide-react";
 
 const urgencyColors = {
   "Emergency (today)": "bg-destructive/10 text-destructive border-destructive/20",
@@ -12,7 +14,10 @@ const urgencyColors = {
   "Just looking": "bg-muted text-muted-foreground border-border",
 };
 
-export default function LeadTable({ leads, isLoading }) {
+export default function LeadTable({ leads, isLoading, selectedIds, onToggleSelect, onToggleAll, onDelete }) {
+  const allSelected = leads.length > 0 && leads.every((l) => selectedIds.has(l.id));
+  const someSelected = leads.some((l) => selectedIds.has(l.id));
+
   if (isLoading) {
     return (
       <div className="space-y-3">
@@ -39,6 +44,14 @@ export default function LeadTable({ leads, isLoading }) {
         <Table>
           <TableHeader>
             <TableRow className="bg-muted/50">
+              <TableHead className="w-10">
+                <Checkbox
+                  checked={allSelected}
+                  onCheckedChange={(checked) => onToggleAll(checked)}
+                  aria-label="Select all"
+                  className={someSelected && !allSelected ? "opacity-50" : ""}
+                />
+              </TableHead>
               <TableHead className="font-semibold">Name</TableHead>
               <TableHead className="font-semibold">Phone</TableHead>
               <TableHead className="font-semibold">Issue</TableHead>
@@ -46,11 +59,22 @@ export default function LeadTable({ leads, isLoading }) {
               <TableHead className="font-semibold">Status</TableHead>
               <TableHead className="font-semibold">Source</TableHead>
               <TableHead className="font-semibold">Last Updated</TableHead>
+              <TableHead className="w-10" />
             </TableRow>
           </TableHeader>
           <TableBody>
             {leads.map((lead) => (
-              <TableRow key={lead.id} className="hover:bg-muted/30 transition-colors">
+              <TableRow
+                key={lead.id}
+                className={`hover:bg-muted/30 transition-colors ${selectedIds.has(lead.id) ? "bg-primary/3" : ""}`}
+              >
+                <TableCell>
+                  <Checkbox
+                    checked={selectedIds.has(lead.id)}
+                    onCheckedChange={() => onToggleSelect(lead.id)}
+                    aria-label="Select row"
+                  />
+                </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-2">
                     <User className="w-4 h-4 text-muted-foreground" />
@@ -97,6 +121,16 @@ export default function LeadTable({ leads, isLoading }) {
                       ? format(new Date(lead.updated_date), "MMM d, h:mm a")
                       : format(new Date(lead.created_date), "MMM d, h:mm a")}
                   </div>
+                </TableCell>
+                <TableCell>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+                    onClick={() => onDelete(lead)}
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}

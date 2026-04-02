@@ -1,16 +1,23 @@
 import React, { useState } from "react";
 import { base44 } from "@/api/base44Client";
-import { useQuery } from "@tanstack/react-query";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
-import { Search, Filter } from "lucide-react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useToast } from "@/components/ui/use-toast";
 
 import DashboardStats from "../components/dashboard/DashboardStats";
 import LeadTable from "../components/dashboard/LeadTable";
+import DashboardToolbar from "../components/dashboard/DashboardToolbar";
+import DeleteConfirmModal from "../components/dashboard/DeleteConfirmModal";
+import { exportLeadsToExcel } from "../utils/exportLeads";
 
 export default function Dashboard() {
   const [statusFilter, setStatusFilter] = useState("all");
   const [search, setSearch] = useState("");
+  const [selectedIds, setSelectedIds] = useState(new Set());
+  const [deleteTarget, setDeleteTarget] = useState(null); // single lead or "bulk"
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const queryClient = useQueryClient();
+  const { toast } = useToast();
 
   const { data: leads = [], isLoading } = useQuery({
     queryKey: ["leads"],
@@ -27,6 +34,56 @@ export default function Dashboard() {
     return statusMatch && searchMatch;
   });
 
+  // Selection helpers
+  const toggleSelect = (id) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+  };
+
+  const toggleAll = (checked) => {
+    setSelectedIds(checked ? new Set(filtered.map((l) => l.id)) : new Set());
+  };
+
+  // Deletion
+  const handleDeleteSingle = (lead) => setDeleteTarget({ type: "single", lead });
+  const handleDeleteBulk = () => setDeleteTarget({ type: "bulk" });
+
+  const handleConfirmDelete = async () => {
+    setIsDeleting(true);
+    try {
+      if (deleteTarget.type === "single") {
+        await base44.entities.Lead.delete(deleteTarget.lead.id);
+        setSelectedIds((prev) => { const n = new Set(prev); n.delete(deleteTarget.lead.id); return n; });
+        toast({ title: "Lead deleted", description: "The lead has been permanently removed." });
+      } else {
+        await Promise.all([...selectedIds].map((id) => base44.entities.Lead.delete(id)));
+        const count = selectedIds.size;
+        setSelectedIds(new Set());
+        toast({ title: `${count} lead${count !== 1 ? "s" : ""} deleted`, description: "Selected leads have been permanently removed." });
+      }
+      queryClient.invalidateQueries({ queryKey: ["leads"] });
+      setDeleteTarget(null);
+    } catch {
+      toast({ title: "Deletion failed", description: "Something went wrong. Please try again.", variant: "destructive" });
+    }
+    setIsDeleting(false);
+  };
+
+  // Export
+  const handleExport = () => {
+    if (filtered.length === 0) {
+      toast({ title: "Nothing to export", description: "No leads match the current filters." });
+      return;
+    }
+    exportLeadsToExcel(filtered);
+    toast({ title: "Export started", description: `Exporting ${filtered.length} leads to Excel.` });
+  };
+
+  const deleteCount = deleteTarget?.type === "bulk" ? selectedIds.size : 1;
+
   return (
     <div className="min-h-screen bg-background font-inter">
       {/* Header */}
@@ -42,38 +99,35 @@ export default function Dashboard() {
       </header>
 
       <main className="max-w-6xl mx-auto px-6 py-8 space-y-8">
-        {/* Stats */}
         <DashboardStats leads={leads} />
 
-        {/* Filters */}
-        <div className="flex flex-col sm:flex-row gap-3">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <Input
-              placeholder="Search by name, phone, or issue..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="pl-10 h-11 rounded-xl border-2"
-            />
-          </div>
-          <div className="flex items-center gap-2">
-            <Filter className="w-4 h-4 text-muted-foreground" />
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-40 h-11 rounded-xl border-2">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Status</SelectItem>
-                <SelectItem value="complete">Complete</SelectItem>
-                <SelectItem value="partial">Partial</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
+        <DashboardToolbar
+          search={search}
+          onSearchChange={setSearch}
+          statusFilter={statusFilter}
+          onStatusFilterChange={setStatusFilter}
+          selectedCount={selectedIds.size}
+          onBulkDelete={handleDeleteBulk}
+          onExport={handleExport}
+        />
 
-        {/* Table */}
-        <LeadTable leads={filtered} isLoading={isLoading} />
+        <LeadTable
+          leads={filtered}
+          isLoading={isLoading}
+          selectedIds={selectedIds}
+          onToggleSelect={toggleSelect}
+          onToggleAll={toggleAll}
+          onDelete={handleDeleteSingle}
+        />
       </main>
+
+      <DeleteConfirmModal
+        open={!!deleteTarget}
+        onClose={() => !isDeleting && setDeleteTarget(null)}
+        onConfirm={handleConfirmDelete}
+        count={deleteCount}
+        isDeleting={isDeleting}
+      />
     </div>
   );
 }
